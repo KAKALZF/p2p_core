@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmg.springboot.p2p.base.mapper.RealAuthMapper">
+	<resultMap id="BaseResultMap" type="com.xmg.springboot.p2p.base.domain.RealAuth">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="realName" jdbcType="VARCHAR" property="realName" />
+		<result column="sex" jdbcType="TINYINT" property="sex" />
+		<result column="bornDate" jdbcType="VARCHAR" property="bornDate" />
+		<result column="idNumber" jdbcType="VARCHAR" property="idNumber" />
+		<result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="state" jdbcType="TINYINT" property="state" />
+		<result column="image1" jdbcType="VARCHAR" property="image1" />
+		<result column="image2" jdbcType="VARCHAR" property="image2" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="auditTime" jdbcType="TIMESTAMP" property="auditTime" />
+		<result column="applyTime" jdbcType="TIMESTAMP" property="applyTime" />
+		<association columnPrefix="au_"
+			javaType="com.xmg.springboot.p2p.base.domain.Logininfo" property="auditor">
+			<id column="id" property="id" />
+			<result column="username" property="username" />
+		</association>
+		<association columnPrefix="ap_"
+			javaType="com.xmg.springboot.p2p.base.domain.Logininfo" property="applier">
+			<id column="id" property="id" />
+			<result column="username" property="username" />
+		</association>
+	</resultMap>
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true">
+		insert
+		into realauth (realName,
+		sex, bornDate,
+		idNumber, address, state,
+		image1, image2, remark,
+		auditTime, applyTime, auditor_id,
+		applier_id)
+		values
+		(#{realName,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT},
+		#{bornDate,jdbcType=VARCHAR},
+		#{idNumber,jdbcType=VARCHAR},
+		#{address,jdbcType=VARCHAR}, #{state,jdbcType=TINYINT},
+		#{image1,jdbcType=VARCHAR}, #{image2,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR},
+		#{auditTime,jdbcType=TIMESTAMP},
+		#{applyTime,jdbcType=TIMESTAMP}, #{auditor.id,jdbcType=BIGINT},
+		#{applier.id,jdbcType=BIGINT})
+	</insert>
+	<update id="updateByPrimaryKey">
+		update realauth
+		set realName =
+		#{realName,jdbcType=VARCHAR},
+		sex =
+		#{sex,jdbcType=TINYINT},
+		bornDate =
+		#{bornDate,jdbcType=VARCHAR},
+		idNumber = #{idNumber,jdbcType=VARCHAR},
+		address =
+		#{address,jdbcType=VARCHAR},
+		state =
+		#{state,jdbcType=TINYINT},
+		image1 =
+		#{image1,jdbcType=VARCHAR},
+		image2 =
+		#{image2,jdbcType=VARCHAR},
+		remark
+		= #{remark,jdbcType=VARCHAR},
+		auditTime =
+		#{auditTime,jdbcType=TIMESTAMP},
+		applyTime =
+		#{applyTime,jdbcType=TIMESTAMP},
+		auditor_id =
+		#{auditor.id,jdbcType=BIGINT},
+		applier_id = #{applier.id}
+		where id =
+		#{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap">
+		select r.id,
+		r.realName, r.sex, r.bornDate, r.idNumber,
+		r.address,
+		r.state, r.image1,
+		r.image2, r.remark,
+		r.auditTime,
+		r.applyTime, r.auditor_id,
+		r.applier_id,ap.id as ap_id,ap.username as
+		ap_username,
+		au.id as
+		au_id,au.username as au_username
+		from
+		realauth r
+		join logininfo ap on
+		r.applier_id=ap.id
+		left join logininfo au on
+		r.auditor_id = au.id
+		where
+		r.id = #{id,jdbcType=BIGINT}
+	</select>
+	<!--查询条件 -->
+	<sql id="base_where">
+		<where>
+			<if test="beginDate!=null">
+				And applyTime &gt;=#{beginDate}
+			</if>
+			<if test="endDate!=null">
+				And applyTime &lt;=#{endDate}
+			</if>
+			<if test="state!=-1">
+				And r.state=#{state}
+			</if>
+		</where>
+	</sql>
+	<!--基本查询列 -->
+	<sql id="base_column">
+		r.id,
+		r.realName, r.sex, r.bornDate, r.idNumber,
+		r.address,
+		r.state, r.image1,
+		r.image2, r.remark,
+		r.auditTime,
+		r.applyTime,
+		r.auditor_id,
+		r.applier_id,ap.id as ap_id,ap.username as
+		ap_username,
+		au.id as
+		au_id,au.username as au_username
+	</sql>
+	<select id="queryForCount" resultType="int">
+		select count(r.id) from
+		realAuth r
+		<include refid="base_where"></include>
+	</select>
+	<select id="query" resultMap="BaseResultMap">
+		select
+		<include refid="base_column"></include>
+		from
+		realAuth r left join logininfo ap on r.applier_id=ap.id
+		left join
+		logininfo au on r.auditor_id=au.id
+		<include refid="base_where"></include>
+		Limit
+		#{beginIndex},#{pageSize}
+	</select>
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xmg.springboot.p2p.business.mapper.PlatformBankInfoMapper">
+	<resultMap id="BaseResultMap"
+		type="com.xmg.springboot.p2p.business.domain.PlatformBankInfo">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="bankName" property="bankName" jdbcType="VARCHAR" />
+		<result column="accountName" property="accountName" jdbcType="VARCHAR" />
+		<result column="accountNumber" property="accountNumber"
+			jdbcType="VARCHAR" />
+		<result column="forkName" property="forkName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		insert
+		into platformbankinfo (bankname, accountname, accountNumber,
+		forkname)
+		values (#{bankName,jdbcType=VARCHAR}, #{accountName,jdbcType=VARCHAR},
+		#{accountNumber,jdbcType=VARCHAR},
+		#{forkName,jdbcType=VARCHAR})
+	</insert>
+	<update id="updateByPrimaryKey">
+		update platformbankinfo
+		set bankname =
+		#{bankName,jdbcType=VARCHAR},
+		accountname =
+		#{accountName,jdbcType=VARCHAR},
+		accountNumber =
+		#{accountNumber,jdbcType=VARCHAR},
+		forkname =
+		#{forkName,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select id, bankname, accountname, accountNumber,
+		forkname
+		from platformbankinfo
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<select id="queryForCount" resultType="int">
+		select count(id) from
+		platformbankinfo
+	</select>
+	<select id="query" resultMap="BaseResultMap">
+		select id, bankname, accountname,
+		accountNumber,
+		forkname from platformbankinfo
+		limit #{beginIndex}
+		,#{pageSize}
+	</select>
+	<select id="selectAll" resultMap="BaseResultMap">
+		select id, bankname,
+		accountname,
+		accountNumber,
+		forkname from
+		platformbankinfo
+	</select>
+</mapper>

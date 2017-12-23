@@ -1,0 +1,19 @@
+package com.xmg.springboot.p2p.business.mapper;
+
+import java.util.List;
+
+import com.xmg.springboot.p2p.business.domain.BidRequest;
+import com.xmg.springboot.p2p.business.query.BidRequestQueryObject;
+
+public interface BidRequestMapper {
+
+	int insert(BidRequest record);
+
+	BidRequest selectByPrimaryKey(Long id);
+
+	int updateByPrimaryKey(BidRequest record);
+
+	int queryForCount(BidRequestQueryObject qo);
+
+	List<BidRequest> query(BidRequestQueryObject qo);
+}

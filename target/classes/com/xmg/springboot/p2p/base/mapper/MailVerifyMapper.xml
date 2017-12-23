@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmg.springboot.p2p.base.mapper.MailVerifyMapper">
+	<resultMap id="BaseResultMap" type="com.xmg.springboot.p2p.base.domain.MailVerify">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="user_id" jdbcType="BIGINT" property="userId" />
+		<result column="sendTime" property="sendTime" />
+		<result column="uuid" jdbcType="VARCHAR" property="uuid" />
+		<result column="email" jdbcType="VARCHAR" property="email" />
+	</resultMap>
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true">
+		insert
+		into
+		mailverify (user_id, sendTime, uuid,
+		email)
+		values
+		(#{userId,jdbcType=BIGINT}, #{sendTime,jdbcType=TIMESTAMP},
+		#{uuid,jdbcType=VARCHAR},
+		#{email,jdbcType=VARCHAR})
+	</insert>
+	<select id="selectByUUID" resultMap="BaseResultMap">
+		select id,
+		user_id,
+		sendTime,
+		uuid, email
+		from mailverify
+		where uuid = #{uuid}
+	</select>
+</mapper>

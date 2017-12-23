@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xmg.springboot.p2p.business.mapper.BidMapper">
+	<resultMap id="BaseResultMap" type="com.xmg.springboot.p2p.business.domain.Bid">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="actualRate" property="actualRate" jdbcType="DECIMAL" />
+		<result column="availableAmount" property="availableAmount"
+			jdbcType="DECIMAL" />
+		<result column="bidRequest_id" property="bidRequestId"
+			jdbcType="BIGINT" />
+		<result column="bidTime" property="bidTime" jdbcType="TIMESTAMP" />
+		<result column="bidRequestTitle" property="bidRequestTitle"
+			jdbcType="VARCHAR" />
+		<result column="bidRequestState" property="bidRequestState"
+			jdbcType="TINYINT" />
+		<association columnPrefix="bu_"
+			javaType="com.xmg.springboot.p2p.base.domain.Logininfo" property="bidUser">
+			<id column="id" property="id" />
+			<result column="username" property="username" />
+		</association>
+	</resultMap>
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		insert
+		into bid (actualRate,
+		availableAmount, bidrequest_id,
+		bidUser_id,
+		bidTime, bidRequestTitle,
+		bidRequestState)
+		values
+		(#{actualRate,jdbcType=DECIMAL},
+		#{availableAmount,jdbcType=DECIMAL},
+		#{bidRequestId,jdbcType=BIGINT},
+		#{bidUser.id,jdbcType=BIGINT},
+		#{bidTime,jdbcType=TIMESTAMP},
+		#{bidRequestTitle,jdbcType=VARCHAR},
+		#{bidRequestState,jdbcType=TINYINT})
+	</insert>
+	<sql id="base_column">
+		b.id, b.actualRate, b.availableAmount,
+		b.bidrequest_id,
+		b.bidUser_id, b.bidTime,
+		b.bidRequestTitle,
+		b.bidRequestState,bu.id as
+		bu_id,bu.username as bu_usernaem
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="base_column"></include>
+		from bid b
+		join
+		logininfo bu on
+		b.biduUser_id=bu.id
+		where b.id =
+		#{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="listByBidRequestId" resultMap="BaseResultMap">
+		select
+		<include refid="base_column" />
+		from bid b join logininfo bu on b.bidUser_id = bu.id
+		where
+		b.bidRequest_id=#{id}
+	</select>
+	<update id="batchUpdateBidStates">
+		update bid set bidRequestState=#{state} where
+		bidRequest_Id=#{bidRequestId}
+	</update>
+	<!-- 通过借款对象的id获取投资对象 -->
+	<select id="getBidsByBidRequestId" resultMap="BaseResultMap">
+		select
+		<include refid="base_column" />
+		from bid b join logininfo bu on b.bidUser_id = bu.id where
+		b.bidrequest_id=#{id}
+	</select>
+</mapper>

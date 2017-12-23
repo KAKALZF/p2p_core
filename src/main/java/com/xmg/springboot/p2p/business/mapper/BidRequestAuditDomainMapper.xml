@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.xmg.springboot.p2p.business.mapper.BidRequestAuditDomainMapper">
+	<resultMap id="BaseResultMap"
+		type="com.xmg.springboot.p2p.business.domain.BidRequestAuditDomain">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="state" property="state" jdbcType="TINYINT" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="auditTime" property="auditTime" jdbcType="TIMESTAMP" />
+		<result column="applyTime" property="applyTime" jdbcType="TIMESTAMP" />
+		<result column="bidRequestId" property="bidRequestId" jdbcType="BIGINT" />
+		<result column="auditType" property="auditType" jdbcType="TINYINT" />
+		<association columnPrefix="au_"
+			javaType="com.xmg.springboot.p2p.base.domain.Logininfo" property="auditor">
+			<id column="id" property="id" />
+			<result column="username" property="username" />
+		</association>
+		<association columnPrefix="ap_"
+			javaType="com.xmg.springboot.p2p.base.domain.Logininfo" property="applier">
+			<id column="id" property="id" />
+			<result column="username" property="username" />
+		</association>
+	</resultMap>
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		insert
+		into bidrequestauditdomain (state, remark, auditTime,applyTime,
+		auditor_id, applier_id,
+		bidRequestId, auditType)
+		values
+		(#{state,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR},
+		#{auditTime,jdbcType=TIMESTAMP},
+		#{applyTime,jdbcType=TIMESTAMP},
+		#{auditor.id,jdbcType=BIGINT}, #{applier.id,jdbcType=BIGINT},
+		#{bidRequestId,jdbcType=BIGINT}, #{auditType,jdbcType=TINYINT})
+	</insert>
+	<update id="updateByPrimaryKey">
+		update bidrequestauditdomain
+		set
+		state =
+		#{state,jdbcType=TINYINT},
+		remark = #{remark,jdbcType=VARCHAR},
+		auditTime = #{auditauditTimetime,jdbcType=TIMESTAMP},
+		applyTime =
+		#{applyTime,jdbcType=TIMESTAMP},
+		auditor_id =
+		#{auditor.id,jdbcType=BIGINT},
+		applier_id =
+		#{applier.id,jdbcType=BIGINT},
+		bidRequestId =
+		#{bidRequestId,jdbcType=BIGINT},
+		auditType =
+		#{auditType,jdbcType=TINYINT}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		SELECT
+		<include refid="base_column"></include>
+		FROM
+		bidrequestauditdomain b
+		JOIN
+		logininfo ap on
+		r.applier_id=ap.id
+		LEFT
+		JOIN logininfo au on
+		r.auditor_id = au.id
+		WHERE b.id =
+		#{id,jdbcType=BIGINT}
+	</select>
+
+	<sql id="base_column">
+		b.id, b.state, b.remark, b.auditTime, b.applyTime,
+		b.auditor_id,
+		b.applier_id,
+		b.bidRequestId,
+		b.auditType,ap.id as
+		ap_id,ap.username as
+		ap_username,
+		au.id as
+		au_id,au.username as
+		au_username
+	</sql>
+	<select id="listAuditsByBidRequestId" resultMap="BaseResultMap">
+		select
+		<include refid="base_column"></include>
+		from bidrequestauditdomain b
+		JOIN
+		logininfo ap on
+		b.applier_id=ap.id
+		LEFT
+		JOIN logininfo au on
+		b.auditor_id = au.id
+		WHERE b.bidRequestId = #{id,jdbcType=BIGINT}
+		order by b.auditTime
+	</select>
+</mapper>
