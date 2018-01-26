@@ -39,6 +39,6 @@
 		select id, version, usableAmount, freezedAmount,
 		unReturnExpAmount
 		from expaccount
-		where id = #{id,jdbcType=BIGINT}
+		where id = #{id}
 	</select>
 </mapper>

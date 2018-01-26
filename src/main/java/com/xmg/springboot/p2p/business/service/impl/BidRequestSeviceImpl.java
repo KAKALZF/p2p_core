@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sun.tools.internal.jxc.apt.Const;
+
 import com.xmg.springboot.p2p.base.domain.Account;
 import com.xmg.springboot.p2p.base.domain.BaseAuditDomain;
 import com.xmg.springboot.p2p.base.domain.Logininfo;

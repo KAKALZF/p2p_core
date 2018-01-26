@@ -125,14 +125,14 @@
 	</sql>
 	<select id="queryForCount" resultType="int">
 		select count(r.id) from
-		realAuth r
+		realauth r
 		<include refid="base_where"></include>
 	</select>
 	<select id="query" resultMap="BaseResultMap">
 		select
 		<include refid="base_column"></include>
 		from
-		realAuth r left join logininfo ap on r.applier_id=ap.id
+		realauth r left join logininfo ap on r.applier_id=ap.id
 		left join
 		logininfo au on r.auditor_id=au.id
 		<include refid="base_where"></include>

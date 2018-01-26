@@ -25,4 +25,15 @@ public class Logininfo {
 	private String password;
 	private int state;
 	private int userType;
+
+	@Override
+	public String toString() {
+		return "Logininfo{" +
+				"id=" + id +
+				", username='" + username + '\'' +
+				", password='" + password + '\'' +
+				", state=" + state +
+				", userType=" + userType +
+				'}';
+	}
 }
