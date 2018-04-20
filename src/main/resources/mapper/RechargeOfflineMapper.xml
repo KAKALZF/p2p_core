@@ -104,7 +104,7 @@
 		logininfo au
 		on
 		r.auditor_id
-		= au.id left join platformBankInfo bi on
+		= au.id left join platformbankinfo bi on
 		r.bankInfo_id =
 		bi.id
 	</sql>

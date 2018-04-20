@@ -6,7 +6,7 @@
 	<version>1.0.0</version>
 	<name>p2p_core</name>
 	<properties>
-		<java.version>1.7</java.version>
+		<java.version>1.8</java.version>
 	</properties>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
